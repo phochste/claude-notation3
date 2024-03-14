@@ -1,0 +1,100 @@
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+QUESTION
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+What derivations are expected from the following Notation3 written below:
+@prefix : <urn:example.org:> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix list: <http://www.w3.org/2000/10/swap/list#> .
+
+:zabahaba :bralala (1 2 3 4).
+
+{
+    :zabahaba :bralala ?X .
+    ?X :zoombala ?Y .
+}
+=>
+{
+    :result :is ?Y .
+} .
+
+{
+    ?L :zoombala ?R .
+}
+<=
+{
+    (?L ()) :amaizunne ?R .
+} .
+
+{
+    (() ?R) :amaizunne ?Ra .
+}
+<= 
+{
+    ?R log:equalTo ?Ra .
+} .
+
+{
+    (?L ?A) :amaizunne ?R .
+}
+<=
+{
+    ?L list:firstRest (?H ?T) .
+    ( (?H) ?A) list:append ?AX .
+    (?T ?AX) :amaizunne ?R .
+} .
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+ANSWER
+[
+  {
+    type: 'text',
+    text: 'Based on the given Notation3 rules, the following derivations are expected:\n' +
+      '\n' +
+      '1. :zabahaba :bralala (1 2 3 4).\n' +
+      '   This is a given fact stating that :zabahaba has the property :bralala with the value (1 2 3 4), which is a list.\n' +
+      '\n' +
+      '2. {\n' +
+      '       :zabahaba :bralala ?X .\n' +
+      '       ?X :zoombala ?Y .\n' +
+      '   }\n' +
+      '   =>\n' +
+      '   {\n' +
+      '       :result :is ?Y .\n' +
+      '   }\n' +
+      '   This rule states that if :zabahaba has the property :bralala with a value ?X, and ?X has the property :zoombala with a value ?Y, then :result has the property :is with the value ?Y.\n' +
+      '\n' +
+      '3. {\n' +
+      '       ?L :zoombala ?R .\n' +
+      '   }\n' +
+      '   <=\n' +
+      '   {\n' +
+      '       (?L ()) :amaizunne ?R .\n' +
+      '   }\n' +
+      '   This rule defines the :zoombala property. It states that if (?L ()) has the property :amaizunne with a value ?R, then ?L has the property :zoombala with the value ?R.\n' +
+      '\n' +
+      '4. {\n' +
+      '       (() ?R) :amaizunne ?Ra .\n' +
+      '   }\n' +
+      '   <=\n' +
+      '   {\n' +
+      '       ?R log:equalTo ?Ra .\n' +
+      '   }\n' +
+      '   This rule defines the base case for the :amaizunne property. It states that if ?R is equal to ?Ra, then (() ?R) has the property :amaizunne with the value ?Ra.\n' +
+      '\n' +
+      '5. {\n' +
+      '       (?L ?A) :amaizunne ?R .\n' +
+      '   }\n' +
+      '   <=\n' +
+      '   {\n' +
+      '       ?L list:firstRest (?H ?T) .\n' +
+      '       ( (?H) ?A) list:append ?AX .\n' +
+      '       (?T ?AX) :amaizunne ?R .\n' +
+      '   }\n' +
+      '   This rule defines the recursive case for the :amaizunne property. It states that if ?L is a non-empty list with the first element ?H and the rest of the list ?T, and ((?H) ?A) appended with ?AX gives (?T ?AX), and (?T ?AX) has the property :amaizunne with the value ?R, then (?L ?A) has the property :amaizunne with the value ?R.\n' +
+      '\n' +
+      'Based on these rules, the expected derivation is:\n' +
+      ':result :is (1 2 3 4).\n' +
+      '\n' +
+      'This is because :zabahaba :bralala (1 2 3 4), and (1 2 3 4) :zoombala (1 2 3 4) based on the recursive definition of :amaizunne. Therefore, according to the rule in step 2, :result :is (1 2 3 4) can be derived.'
+  }
+]
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

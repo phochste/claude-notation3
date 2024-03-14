@@ -1,0 +1,40 @@
+@prefix : <urn:example.org:> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix list: <http://www.w3.org/2000/10/swap/list#> .
+
+:zabahaba :bralala (1 2 3 4).
+
+{
+    :zabahaba :bralala ?X .
+    ?X :zoombala ?Y .
+}
+=>
+{
+    :result :is ?Y .
+} .
+
+{
+    ?L :zoombala ?R .
+}
+<=
+{
+    (?L ()) :amaizunne ?R .
+} .
+
+{
+    (() ?R) :amaizunne ?Ra .
+}
+<= 
+{
+    ?R log:equalTo ?Ra .
+} .
+
+{
+    (?L ?A) :amaizunne ?R .
+}
+<=
+{
+    ?L list:firstRest (?H ?T) .
+    ( (?H) ?A) list:append ?AX .
+    (?T ?AX) :amaizunne ?R .
+} .
