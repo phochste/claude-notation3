@@ -1,0 +1,40 @@
+@prefix : <urn:example.org:> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix list: <http://www.w3.org/2000/10/swap/list#> .
+
+:MyList :is (1 2 3 4).
+
+{
+    :MyList :is ?X .
+    ?X :rev ?Y .
+}
+=>
+{
+    :result :is ?Y .
+} .
+
+{
+    ?L :rev ?R .
+}
+<=
+{
+    (?L ()) :revAcc ?R .
+} .
+
+{
+    (() ?R) :revAcc ?Ra .
+}
+<= 
+{
+    ?R log:equalTo ?Ra .
+} .
+
+{
+    (?L ?Acc) :revAcc ?R .
+}
+<=
+{
+    ?L list:firstRest (?H ?T) .
+    ( (?H) ?Acc) list:append ?AccNew .
+    (?T ?AccNew) :revAcc ?R .
+} .

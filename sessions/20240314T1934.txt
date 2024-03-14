@@ -1,0 +1,79 @@
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+QUESTION
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+What derivations are expected from the following Notation3 written below:
+@prefix : <urn:example.org:> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix list: <http://www.w3.org/2000/10/swap/list#> .
+
+:MyList :is (1 2 3 4).
+
+{
+    :MyList :is ?X .
+    ?X :rev ?Y .
+}
+=>
+{
+    :result :is ?Y .
+} .
+
+{
+    ?L :rev ?R .
+}
+<=
+{
+    (?L ()) :revAcc ?R .
+} .
+
+{
+    (() ?R) :revAcc ?Ra .
+}
+<= 
+{
+    ?R log:equalTo ?Ra .
+} .
+
+{
+    (?L ?Acc) :revAcc ?R .
+}
+<=
+{
+    ?L list:firstRest (?H ?T) .
+    ( (?H) ?Acc) list:append ?AccNew .
+    (?T ?AccNew) :revAcc ?R .
+} .
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+ANSWER
+[
+  {
+    type: 'text',
+    text: 'Based on the given Notation3 rules, the following derivations are expected:\n' +
+      '\n' +
+      '1. The fact ":MyList :is (1 2 3 4)" states that :MyList is a list containing the elements 1, 2, 3, and 4.\n' +
+      '\n' +
+      '2. The first rule says that if :MyList is bound to a variable ?X and ?X has a reverse list ?Y, then :result is bound to ?Y.\n' +
+      '\n' +
+      '3. The second rule defines the :rev relation. It states that if a list ?L has a reverse list ?R, then (?L ()) and ?R are related by the :revAcc relation. In other words, ?R is the result of reversing ?L and accumulating the elements in an empty list ().\n' +
+      '\n' +
+      '4. The third rule is a base case for the :revAcc relation. It states that if the list ?L is empty (represented by ()), then the accumulator list ?R is equal to the reversed list ?Ra.\n' +
+      '\n' +
+      '5. The fourth rule is the recursive case for the :revAcc relation. It states that if a list ?L is not empty and can be split into a first element ?H and the rest of the list ?T, then:\n' +
+      '   - ?H is appended to the accumulator list ?Acc to form a new accumulator list ?AccNew.\n' +
+      '   - The :revAcc relation is recursively applied to the rest of the list ?T and the new accumulator list ?AccNew to obtain the final reversed list ?R.\n' +
+      '\n' +
+      'Given these rules and the fact about :MyList, the expected derivation is:\n' +
+      '\n' +
+      '1. :MyList is bound to (1 2 3 4).\n' +
+      "2. The second rule is applied, binding ?L to (1 2 3 4) and ?R to a new variable, let's say ?R1.\n" +
+      '3. The fourth rule is applied recursively:\n' +
+      '   - First iteration: ?H = 1, ?T = (2 3 4), ?Acc = (), ?AccNew = (1), ?R1 is bound to the result of (:revAcc (2 3 4) (1)).\n' +
+      '   - Second iteration: ?H = 2, ?T = (3 4), ?Acc = (1), ?AccNew = (2 1), ?R1 is bound to the result of (:revAcc (3 4) (2 1)).\n' +
+      '   - Third iteration: ?H = 3, ?T = (4), ?Acc = (2 1), ?AccNew = (3 2 1), ?R1 is bound to the result of (:revAcc (4) (3 2 1)).\n' +
+      '   - Fourth iteration: ?H = 4, ?T = (), ?Acc = (3 2 1), ?AccNew = (4 3 2 1), ?R1 is bound to the result of (:revAcc () (4 3 2 1)).\n' +
+      '4. The third rule is applied, binding ?Ra to (4 3 2 1), and ?R1 is now bound to (4 3 2 1).\n' +
+      '5. The first rule is applied, binding ?X to (1 2 3 4) and ?Y to (4 3 2 1), resulting in :result being bound to (4 3 2 1).\n' +
+      '\n' +
+      'Therefore, the expected derivation is that :result will be bound to the reversed list (4 3 2 1).'
+  }
+]
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
